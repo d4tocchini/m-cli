@@ -25,7 +25,6 @@ help(){
       m network wakeonethernet         [ YES | NO ]    # whether to allow the computer to wake up if it receives a special network packet
 
       m network appleremoteevents      [ ON | OFF ]    # whether to allow Apple remote events
-      m network internetsharing        [ ON | OFF ]    # whether to allow internet sharing
       m network ipv6                   [ ON | OFF ]    # whether to enable ipv6 on interfaces
 __EOF__
 
@@ -156,12 +155,6 @@ appleremoteevents(){
     sudo systemsetup -setremoteappleevents "${choice}"
 }
 
-internetsharing(){
-    choice="$(_mcli_convert_yes_no_to_on_off "$1")"
-
-    sudo systemsetup -setremoteappleevents "${choice}"
-}
-
 ipv6(){
     choice="$(_mcli_convert_yes_no_to_on_off "$1")"
 
@@ -208,9 +201,6 @@ case "${subcommand}" in
         ;;
     appleremoteevents)
         appleremoteevents "$@"
-        ;;
-    internetsharing)
-        internetsharing "$@"
         ;;
     bonjouradvertisements)
         bonjouradvertisements "$@"
