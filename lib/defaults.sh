@@ -135,3 +135,43 @@ _mcli_defaults_yes_no_to_type() {
       echo "ERROR"
     fi
 }
+
+_mcli_defaults_yes_no_to_array_item() {
+    local choice="$(_mcli_convert_yes_no_to_boolean "$1")"
+    local file="$2"
+    local array="$3"
+    local item="$4"
+    local sudo="$5"
+
+    if [ "${choice}" -eq 'true' ]; then
+      _mcli_defaults_add_array_item "${file}" "${array}" "${item}" "${sudo}"
+    else
+      _mcli_defaults_delete_array_item "${file}" "${array}" "${item}" "${sudo}"
+    fi
+}
+
+_mcli_defaults_add_array_item() {
+    local file="$1"
+    local array="$2"
+    local item="$3"
+    local sudo="$4"
+
+    index="$(${sudo} /usr/libexec/PlistBuddy -c "Print ${array}" "${file}" | head -n -1 | tail -n +2 | sed "s/^[ \t]*//" | grep --line-regexp --line-number "${item}" | awk -F ":" '{print $1}')"
+
+    [ -z "${index}" ] && ${sudo} /usr/libexec/PlistBuddy -c "Add :${array}:0" "${file}"
+}
+
+_mcli_defaults_delete_array_item() {
+    local file="$1"
+    local array="$2"
+    local item="$3"
+    local sudo="$4"
+
+    index="$(${sudo} /usr/libexec/PlistBuddy -c "Print ${array}" "${file}" | head -n -1 | tail -n +2 | sed "s/^[ \t]*//" | grep --line-regexp --line-number "${item}" | awk -F ":" '{print $1}')"
+
+    if [ -n "${index}" ]; then
+      index=$((index - 1))
+
+      ${sudo} /usr/libexec/PlistBuddy -c "Delete :${array}:${index}" "${file}"
+    fi
+}
