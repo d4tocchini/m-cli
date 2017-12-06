@@ -42,6 +42,7 @@ case "${subcommand}" in
 
         if [ -n "${choice}" ]; then
           sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned   "${choice}"
+          sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedpp "${choice}"
         else
           sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getallowsigned
         fi
