@@ -14,6 +14,7 @@ help(){
       m menubar autohide   [ YES | NO ]   # Whether to autohide the menu bar
       m menubar airplay    [ YES | NO ]   # Whether to show the airplay options in the menu bar
       m menubar addicon    [ menuitem ]   # Add a menu bar item
+      m menubar removeicon [ menuitem ]   # Remove a menu bar item
 
     Where [menuitem] is one of:
 
@@ -69,6 +70,19 @@ addicon() {
                                   "/System/Library/CoreServices/Menu Extras/${menu_item}.menu"
 }
 
+removeicon() {
+    item="$1"
+    domain="$(find_domain "${item}")"
+    menu_item="$(find_menu_item "${item}")"
+
+    value="$(_mcli_defaults_yes_no_to_boolean "com.apple.systemuiserver" \
+                                              "NSStatusItem Visible ${domain}" \
+                                              "true")"
+
+    _mcli_defaults_delete_array_item 'com.apple.systemuiserver' \
+                                     'menuExtras' \
+                                     "/System/Library/CoreServices/Menu Extras/${menu_item}.menu"
+}
 
 find_domain() {
     case "$1" in
@@ -197,6 +211,9 @@ case "${subcommand}" in
         ;;
     addicon)
         addicon "$@"
+        ;;
+    removeicon)
+        removeicon "$@"
         ;;
     *)
         help
