@@ -13,6 +13,28 @@ help(){
     Usage:
       m menubar autohide   [ YES | NO ]   # Whether to autohide the menu bar
       m menubar airplay    [ YES | NO ]   # Whether to show the airplay options in the menu bar
+      m menubar addicon    [ menuitem ]   # Add a menu bar item
+
+    Where [menuitem] is one of:
+
+      * airplay
+      * battery
+      * bluetooth
+      * chat
+      * clock
+      * dwellcontrol
+      * eject
+      * ink
+      * ppp
+      * pppoe
+      * script
+      * siri
+      * text
+      * timemachine
+      * universalaccess
+      * volume
+      * vpn
+      * wifi
 
 __EOF__
 }
@@ -33,6 +55,136 @@ airplay() {
     echo "${command} ${subcommand}: ${value}"
 }
 
+addicon() {
+    item="$1"
+    domain="$(find_domain "${item}")"
+    menu_item="$(find_menu_item "${item}")"
+
+    value="$(_mcli_defaults_yes_no_to_boolean "com.apple.systemuiserver" \
+                                              "NSStatusItem Visible ${domain}" \
+                                              "true")"
+
+    _mcli_defaults_add_array_item 'com.apple.systemuiserver' \
+                                  'menuExtras' \
+                                  "/System/Library/CoreServices/Menu Extras/${menu_item}.menu"
+}
+
+
+find_domain() {
+    case "$1" in
+        airplay)
+            echo "com.apple.menuextra.airplay"
+            ;;
+        battery)
+            echo "com.apple.menuextra.battery"
+            ;;
+        bluetooth)
+            echo "com.apple.menuextra.bluetooth"
+            ;;
+        chat)
+            echo "com.apple.menuextra.iChat"
+            ;;
+        clock)
+            echo "com.apple.menuextra.clock"
+            ;;
+        dwellcontrol)
+            echo "com.apple.menuextra.dwellcontrol"
+            ;;
+        eject)
+            echo "com.apple.menuextra.eject"
+            ;;
+        ink)
+            echo "com.apple.menuextra.ink"
+            ;;
+        ppp)
+            echo "com.apple.menuextra.ppp"
+            ;;
+        pppoe)
+            echo "com.apple.menuextra.pppoe"
+            ;;
+        script)
+            echo "com.apple.scriptmenu"
+            ;;
+        siri)
+            echo "Siri"
+            ;;
+        text)
+            echo "com.apple.menuextra.textinput"
+            ;;
+        timemachine)
+            echo "com.apple.menuextra.TimeMachine"
+            ;;
+        universalaccess)
+            echo "com.apple.menuextra.universalaccess"
+            ;;
+        volume)
+            echo "com.apple.menuextra.volume"
+            ;;
+        vpn)
+            echo "com.apple.menuextra.vpn"
+            ;;
+        wifi)
+            echo "com.apple.menuextra.airport"
+            ;;
+    esac
+}
+
+find_menu_item() {
+    case "$1" in
+        airplay)
+            echo "Displays"
+            ;;
+        battery)
+            echo "Battery"
+            ;;
+        bluetooth)
+            echo "Bluetooth"
+            ;;
+        chat)
+            echo "iChat"
+            ;;
+        clock)
+            echo "Clock"
+            ;;
+        dwellcontrol)
+            echo "DwellControl"
+            ;;
+        eject)
+            echo "Eject"
+            ;;
+        ink)
+            echo "Ink"
+            ;;
+        ppp)
+            echo "PPP"
+            ;;
+        pppoe)
+            echo "PPPoE"
+            ;;
+        script)
+            echo "Script Menu"
+            ;;
+        text)
+            echo "TextInput"
+            ;;
+        timemachine)
+            echo "TimeMachine"
+            ;;
+        universalaccess)
+            echo "UniversalAccess"
+            ;;
+        volume)
+            echo "Volume"
+            ;;
+        vpn)
+            echo "VPN"
+            ;;
+        wifi)
+            echo "AirPort"
+            ;;
+    esac
+}
+
 case "${subcommand}" in
     help)
         help
@@ -42,6 +194,9 @@ case "${subcommand}" in
         ;;
     airplay)
         airplay "$@"
+        ;;
+    addicon)
+        addicon "$@"
         ;;
     *)
         help
