@@ -26,6 +26,7 @@ help(){
 
       m network appleremoteevents      [ ON | OFF ]    # whether to allow Apple remote events
       m network internetsharing        [ ON | OFF ]    # whether to allow internet sharing
+      m network ipv6                   [ ON | OFF ]    # whether to enable ipv6 on interfaces
 __EOF__
 
 }
@@ -161,6 +162,25 @@ internetsharing(){
     sudo systemsetup -setremoteappleevents "${choice}"
 }
 
+ipv6(){
+    choice="$(_mcli_convert_yes_no_to_on_off "$1")"
+
+    sudo networksetup -listallnetworkservices |
+         while read -r interface; do
+            is_off=$(networksetup -getinfo "${interface}" | grep "IPv6: Off")
+
+            if [[ "${choice}" == "off" ]]; then
+              if [ -z "${is_off}" ]; then
+                  networksetup -setv6off "${interface}"
+              fi
+            elif [[ "${choice}" == "on" ]]; then
+              if [ -n "${is_off}" ]; then
+                  networksetup -setv6automatic "${interface}"
+              fi
+            fi
+         done
+}
+
 case "${subcommand}" in
     help)
         help
@@ -194,6 +214,9 @@ case "${subcommand}" in
         ;;
     bonjouradvertisements)
         bonjouradvertisements "$@"
+        ;;
+    ipv6)
+        ipv6 "$@"
         ;;
     *)
         help
