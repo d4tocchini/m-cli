@@ -39,6 +39,12 @@ __EOF__
 
 usentpserver(){
     local choice="$(_mcli_convert_yes_no_to_on_off "$1")"
+    local restrict_external_access="restrict lo interface ignore wildcard interface listen lo"
+    local ntp_restrictions="/etc/ntp-restrict.conf"
+
+    if grep --invert-match --quiet "${restrict_external_access}" "${ntp_restrictions}"; then
+      sudo sh -c "echo '${restrict_external_access}' >> '${ntp_restrictions}'"
+    fi
 
     sudo sh -c "/usr/sbin/systemsetup -setusingnetworktime ${choice} &> /dev/null"
 }
