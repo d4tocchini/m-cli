@@ -48,6 +48,12 @@ displaysleeptime(){
 }
 
 hibernationdelay(){
+  if [[ "$1" == "0" ]] && [[ "$2" == "0" ]]; then
+      _set_power_setting "standby" "0" "0"
+  else
+      _set_power_setting "standby" "1" "1"
+  fi
+
   _set_power_setting "standbydelay" "$1" "$2"
 }
 
