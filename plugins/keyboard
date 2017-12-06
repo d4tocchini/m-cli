@@ -50,6 +50,9 @@ spellchecking() {
 
 textsubstitution() {
     value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
+                                              "NSAutomaticCapitalizationEnabled" \
+                                              "$1")"
+    value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
                                               "NSAutomaticDashSubstitutionEnabled" \
                                               "$1")"
     value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
@@ -66,6 +69,9 @@ textsubstitution() {
                                               "$1")"
     value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
                                               "WebAutomaticTextReplacementEnabled" \
+                                              "$1")"
+    value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
+                                              "NSAutomaticPeriodSubstitutionEnabled" \
                                               "$1")"
 
     defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "automaticQuoteSubstitutionEnabled" -bool "${value}"
