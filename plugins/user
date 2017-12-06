@@ -125,6 +125,8 @@ fastswitching(){
                                               "MultipleSessionEnabled" \
                                               "$1")"
 
+    sudo perl -pi -e "s-no_warn group=admin,-no_warn group=-g" /etc/pam.d/screensaver
+
     echo "${command} ${subcommand}: ${value}"
 }
 
