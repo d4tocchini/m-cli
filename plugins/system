@@ -11,6 +11,7 @@ declare subcommand="$1"
 help(){
     cat<<__EOF__
     Usage:
+      m system auditing                   [ YES | NO ]   # Whether to enable security auditing
       m system quarantine                 [ YES | NO ]   # Whether to enable app quarantine
       m system automaticapptermination    [ YES | NO ]   # Whether to enable automatic app termination
       m system documentversioning         [ YES | NO ]   # Whether to enable document versioning
@@ -19,6 +20,15 @@ help(){
       m system savewindowsonquit          [ YES | NO ]   # Whether to save window state
 
 __EOF__
+}
+
+auditing() {
+    local loaded="$(_mcli_convert_yes_no_to_load_unload "$1")"
+
+    sudo sh -c "launchctl ${loaded} -w /System/Library/LaunchDaemons/com.apple.auditd.plist 2> /dev/null"
+    sudo perl -pi -e "s/^flags:.*$/flags:lo,ad,fd,fm,-all/g" /etc/security/audit_control
+
+    echo "${command} ${subcommand}: ${loaded}"
 }
 
 quarantine() {
@@ -97,6 +107,9 @@ savewindowsonquit(){
 case "${subcommand}" in
     help)
         help
+        ;;
+    auditing)
+        auditing "$@"
         ;;
     quarantine)
         quarantine "$@"
