@@ -11,27 +11,29 @@ declare subcommand="$1"
 help(){
     cat<<__EOF__
     Usage:
-      m network ls                            # list network interfaces
-      m network location                      # get current location
-      m network location ls                   # list locations
-      m network location create XYZ           # create a location
-      m network location delete XYZ           # delete a location
-      m network location switch XYZ           # switch location
-      m network defaultusername "your name"   # the default username when connecting (don't specify a name to disable)
-      m network wakeonethernet  [ YES | NO ]  # whether to allow the computer to wake up if it receives a special network packet
-      m network guestaccess     [ YES | NO ]  # whether to allow the guest user to access shared folders
+      m network ls                                     # list network interfaces
+      m network location                               # get current location
+      m network location ls                            # list locations
+      m network location create XYZ                    # create a location
+      m network location delete XYZ                    # delete a location
+      m network location switch XYZ                    # switch location
+      m network defaultusername "your name"            # the default username when connecting (don't specify a name to disable)
+      m network guestaccess            [ YES | NO ]    # whether to allow the guest user to access shared folders
+      m network wakeonethernet         [ YES | NO ]    # whether to allow the computer to wake up if it receives a special network packet
 __EOF__
 
 }
 
 list_netservices(){
-    networksetup -listallhardwareports | while IFS= read -r line; do
-        # if it is a device we will print the ip in the next line
-        if echo ${line} | grep -i "Device" >/dev/null 2>&1; then
-            printf "${line}\nIP:$(ipconfig getifaddr $(echo ${line} | cut -d: -f2 2>/dev/null))\n"
+    sudo networksetup -listallhardwareports |
+    while IFS= read -r line; do
+        if echo "${line}" | grep -q -i "Device"; then
+            device_name=$(echo "${line}" | awk '{print $2}')
+            device_address="$(ipconfig getifaddr "${device_name}")"
 
+            printf "%s\nIP: %s\n" "${line}" "${device_address}"
         else
-            printf "${line}\n"
+            printf "%s\n" "${line}"
         fi
     done
 }
@@ -78,15 +80,15 @@ location(){
     case $1 in
         create)
             [ -z "$2" ] && help && exit 1;
-            networksetup -createlocation $2
+            networksetup -createlocation "$2"
             ;;
         delete|rm)
             [ -z "$2" ] && help && exit 1;
-            networksetup -deletelocation $2
+            networksetup -deletelocation "$2"
             ;;
         switch)
             [ -z "$2" ] && help && exit 1;
-            networksetup -switchtolocation $2
+            networksetup -switchtolocation "$2"
             ;;
         list|ls)
             echo "Locations: "
