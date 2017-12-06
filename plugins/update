@@ -16,6 +16,7 @@ help(){
     Usage:
       m update list                                                           # list available updates
       m update install           [ all | <package_name> ]                     # which updates to install
+      m update automaticcheck    [ YES | NO ]                                 # whether updates should be checked for automatically
       m update automaticinstall  [ YES | NO ]                                 # whether automatic installs should be enabled
       m update automaticdownload [ YES | NO ]                                 # whether automatic downloads should be enabled
       m update interval          [ daily | weekly | biweekly | monthly | x ]  # how often to check for updates
@@ -38,6 +39,14 @@ install_updates(){
             sudo softwareupdate --install "$@"
             ;;
     esac
+}
+
+automaticcheck(){
+    choice="$(_mcli_convert_yes_no_to_on_off)"
+
+    sudo softwareupdate --schedule "${choice}"
+
+    echo "${command} ${subcommand}: ${value}"
 }
 
 automaticinstall(){
@@ -103,6 +112,9 @@ case "${subcommand}" in
         ;;
     install)
         install_updates "$@"
+        ;;
+    automaticcheck)
+        automaticcheck "$@"
         ;;
     automaticinstall)
         automaticinstall "$@"
