@@ -20,6 +20,7 @@ help(){
       m network defaultusername "your name"            # the default username when connecting (don't specify a name to disable)
       m network dnsservers             9.9.9.9 8.8.8.8 # override all interfaces with manually specified DNS servers
       m network bonjouradvertisements  [ YES | NO ]    # whether to allow the computer to advertise its Bonjour services
+      m network captiveportal          [ YES | NO ]    # whether to enable the network capture portal
       m network guestaccess            [ YES | NO ]    # whether to allow the guest user to access shared folders
       m network wakeonethernet         [ YES | NO ]    # whether to allow the computer to wake up if it receives a special network packet
 __EOF__
@@ -71,6 +72,15 @@ dnsservers(){
     done
 
     sudo networksetup -switchtolocation "${current_location}" &> /dev/null
+}
+
+captiveportal(){
+    value="$(_mcli_defaults_yes_no_to_boolean "/Library/Preferences/SystemConfiguration/com.apple.captive.control" \
+                                              "Active" \
+                                              "$1" \
+                                              "sudo")"
+
+    echo "${command} ${subcommand}: ${value}"
 }
 
 wakeonethernet(){
@@ -142,6 +152,9 @@ case "${subcommand}" in
         ;;
     ls|list)
         list_netservices
+        ;;
+    captiveportal)
+        captiveportal "$@"
         ;;
     location)
         location "$@"
