@@ -23,6 +23,8 @@ help(){
       m network captiveportal          [ YES | NO ]    # whether to enable the network capture portal
       m network guestaccess            [ YES | NO ]    # whether to allow the guest user to access shared folders
       m network wakeonethernet         [ YES | NO ]    # whether to allow the computer to wake up if it receives a special network packet
+
+      m network appleremoteevents      [ ON | OFF ]    # whether to allow Apple remote events
 __EOF__
 
 }
@@ -146,6 +148,12 @@ location(){
     esac
 }
 
+appleremoteevents(){
+    choice="$(_mcli_convert_yes_no_to_on_off "$1")"
+
+    sudo systemsetup -setremoteappleevents "${choice}"
+}
+
 case "${subcommand}" in
     help)
         help
@@ -170,6 +178,9 @@ case "${subcommand}" in
         ;;
     guestaccess)
         guestaccess "$@"
+        ;;
+    appleremoteevents)
+        appleremoteevents "$@"
         ;;
     bonjouradvertisements)
         bonjouradvertisements "$@"
