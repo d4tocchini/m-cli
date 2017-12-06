@@ -18,6 +18,7 @@ help(){
       m network location delete XYZ                    # delete a location
       m network location switch XYZ                    # switch location
       m network defaultusername "your name"            # the default username when connecting (don't specify a name to disable)
+      m network dnsservers             9.9.9.9 8.8.8.8 # override all interfaces with manually specified DNS servers
       m network guestaccess            [ YES | NO ]    # whether to allow the guest user to access shared folders
       m network wakeonethernet         [ YES | NO ]    # whether to allow the computer to wake up if it receives a special network packet
 __EOF__
@@ -51,6 +52,24 @@ defaultusername(){
 
     defaults read com.apple.NetworkAuthorization UseDefaultName
     defaults read com.apple.NetworkAuthorization DefaultName
+}
+
+dnsservers(){
+    current_location="$(sudo networksetup -getcurrentlocation)"
+
+    sudo networksetup -listlocations |
+    while read -r location; do
+        sudo networksetup -switchtolocation "${location}" &> /dev/null
+
+        sudo networksetup -listallnetworkservices |
+        tail -n +2 |
+        while read -r interface; do
+            # shellcheck disable=SC2068
+            sudo networksetup -setdnsservers "${interface}" $@
+        done
+    done
+
+    sudo networksetup -switchtolocation "${current_location}" &> /dev/null
 }
 
 wakeonethernet(){
@@ -112,6 +131,9 @@ case "${subcommand}" in
         ;;
     defaultusername)
         defaultusername "$@"
+        ;;
+    dnsservers)
+        dnsservers "$@"
         ;;
     wakeonethernet)
         wakeonethernet "$@"
