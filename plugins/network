@@ -19,6 +19,7 @@ help(){
       m network location switch XYZ                    # switch location
       m network defaultusername "your name"            # the default username when connecting (don't specify a name to disable)
       m network dnsservers             9.9.9.9 8.8.8.8 # override all interfaces with manually specified DNS servers
+      m network bonjouradvertisements  [ YES | NO ]    # whether to allow the computer to advertise its Bonjour services
       m network guestaccess            [ YES | NO ]    # whether to allow the guest user to access shared folders
       m network wakeonethernet         [ YES | NO ]    # whether to allow the computer to wake up if it receives a special network packet
 __EOF__
@@ -95,6 +96,22 @@ guestaccess(){
     echo "${command} ${subcommand}: ${value}"
 }
 
+bonjouradvertisements(){
+    choice="$(_mcli_convert_yes_no_to_inverted_boolean "$1")"
+    value="$(_mcli_defaults_yes_no_to_boolean "/System/Library/LaunchDaemons/com.apple.mDNSResponder" \
+                                              "NoMulticastAdvertisements" \
+                                              "${choice}" \
+                                              "sudo")"
+
+    _mcli_convert_yes_no_to_array_item "${choice}" \
+                                       "/System/Library/LaunchDaemons/com.apple.mDNSResponder.plist" \
+                                       "ProgramArguments" \
+                                       "-NoMulticastAdvertisements" \
+                                       "sudo"
+
+    echo "${command} ${subcommand}: $(_mcli_convert_yes_no_to_inverted_boolean "${value}")"
+}
+
 location(){
     case $1 in
         create)
@@ -140,6 +157,9 @@ case "${subcommand}" in
         ;;
     guestaccess)
         guestaccess "$@"
+        ;;
+    bonjouradvertisements)
+        bonjouradvertisements "$@"
         ;;
     *)
         help
