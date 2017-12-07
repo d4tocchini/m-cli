@@ -16,6 +16,7 @@ help(){
       m datetime ntpserver      hostname     # The NTP server to use to set the time
       m datetime international  [ YES ]      # Sets the date/time formats to the international standard
       m datetime menubarformat  format       # Sets format of the clock in the menu bar
+      m datetime timezone       [ zonename ] # Get/Set the time zone
 __EOF__
 }
 
@@ -66,6 +67,18 @@ menubarformat() {
     defaults write com.apple.menuextra.clock DateFormat -string "$1"
 }
 
+timezone() {
+    local choice="$1"
+
+    if [ -z "${choice}" ]; then
+        value="$(sudo systemsetup -gettimezone)"
+    else
+        value="$(sudo systemsetup -settimezone "$1")"
+    fi
+
+    echo "${command} ${subcommand}: ${value}"
+}
+
 case "${subcommand}" in
     help)
         help
@@ -84,6 +97,9 @@ case "${subcommand}" in
         ;;
     menubarformat)
         menubarformat "$@"
+        ;;
+    timezone)
+        timezone "$@"
         ;;
     *)
         help
