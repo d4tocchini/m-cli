@@ -115,19 +115,12 @@ guestaccess(){
 }
 
 bonjouradvertisements(){
-    choice="$(_mcli_convert_yes_no_to_inverted_boolean "$1")"
-    value="$(_mcli_defaults_yes_no_to_boolean "/System/Library/LaunchDaemons/com.apple.mDNSResponder" \
-                                              "NoMulticastAdvertisements" \
-                                              "${choice}" \
-                                              "sudo")"
+    value="$(_mcli_defaults_yes_no_to_inverted_boolean "/Library/Preferences/com.apple.mDNSResponder.plist" \
+                                                       "NoMulticastAdvertisements" \
+                                                       "${choice}" \
+                                                       "sudo")"
 
-    _mcli_defaults_yes_no_to_array_item "${choice}" \
-                                        "/System/Library/LaunchDaemons/com.apple.mDNSResponder.plist" \
-                                        "ProgramArguments" \
-                                        "-NoMulticastAdvertisements" \
-                                        "sudo"
-
-    echo "${command} ${subcommand}: $(_mcli_convert_yes_no_to_inverted_boolean "${value}")"
+    echo "${command} ${subcommand}: ${value}"
 }
 
 location(){
