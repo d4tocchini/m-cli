@@ -41,8 +41,8 @@ case "${subcommand}" in
         choice="$(_mcli_convert_yes_no_to_on_off "$1")"
 
         if [ -n "${choice}" ]; then
-          sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned   "${choice}"
-          sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedpp "${choice}"
+          sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned    "${choice}"
+          sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedapp "${choice}"
         else
           sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getallowsigned
         fi
