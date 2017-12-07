@@ -74,11 +74,11 @@ windows() {
                                               "$1")"
 
     # Sets the Length of Time in Seconds When a Window is Resized
-    _mcli_defaults_number "NSGlobalDomain" \
-                          "NSWindowResizeTime" \
-                          "$2"
+    speed="$(_mcli_defaults_number "NSGlobalDomain" \
+                                   "NSWindowResizeTime" \
+                                   "$2")"
 
-    echo "${command} ${subcommand}: ${value}"
+    echo "${command} ${subcommand}: ${value} ${speed}"
 }
 
 quicklook() {
