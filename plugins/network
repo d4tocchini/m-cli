@@ -121,7 +121,7 @@ bonjouradvertisements(){
                                               "${choice}" \
                                               "sudo")"
 
-    _mcli_convert_yes_no_to_array_item "${choice}" \
+    _mcli_defaults_yes_no_to_array_item "${choice}" \
                                         "/System/Library/LaunchDaemons/com.apple.mDNSResponder.plist" \
                                         "ProgramArguments" \
                                         "-NoMulticastAdvertisements" \
