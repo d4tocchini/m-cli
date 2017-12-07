@@ -26,25 +26,25 @@ __EOF__
 
 gk_list(){
    if [ -z "$1" ]; then
-       spctl --list
+       sudo spctl --list
    else
-       spctl --list --label "$1"
+       sudo spctl --list --label "$1"
    fi
 }
 
 enable(){
     if [ -z "$1" ]; then
-        spctl --master-enable
+        sudo spctl --master-enable
     else
-        spctl --enable --label "$1"
+        sudo spctl --enable --label "$1"
     fi
 }
 
 disable(){
     if [ -z "$1" ]; then
-        spctl --master-disable
+        sudo spctl --master-disable
     else
-        spctl --disable --label "$1"
+        sudo spctl --disable --label "$1"
     fi
 }
 
@@ -53,7 +53,7 @@ case "${subcommand}" in
         help
         ;;
     status)
-        spctl --status
+        sudo spctl --status
         ;;
     list|ls)
         gk_list "$*"
