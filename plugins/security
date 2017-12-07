@@ -39,7 +39,7 @@ certificatechecking() {
 }
 
 adminauthorizationforpreferences() {
-    security authorizationdb read system.preferences > "/tmp/system.preferences.plist"
+    security authorizationdb read system.preferences > "/tmp/system.preferences.plist" 2> /dev/null
 
     value="$(_mcli_defaults_yes_no_to_boolean "/tmp/system.preferences" \
                                               "shared" \
@@ -48,7 +48,7 @@ adminauthorizationforpreferences() {
                                               "timeout" \
                                               "900")"
 
-    security authorizationdb write system.preferences < /tmp/system.preferences.plist
+    security authorizationdb write system.preferences < /tmp/system.preferences.plist 2> /dev/null
 
     echo "${command} ${subcommand}: ${value}"
 }

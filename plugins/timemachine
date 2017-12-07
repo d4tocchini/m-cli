@@ -35,9 +35,9 @@ useallnetworkvolumes(){
 }
 
 addexclusion(){
-  sudo defaults write /Library/Preferences/com.apple.TimeMachine SkipPaths -array-add "$1"
+  sudo sh -c "defaults write /Library/Preferences/com.apple.TimeMachine SkipPaths -array-add '$1'"
 
-  sudo tmutil addexclusion -p "$1"
+  sudo sh -c "tmutil addexclusion -p '$1'"
 }
 
 case "${subcommand}" in

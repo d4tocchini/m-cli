@@ -157,7 +157,7 @@ infopanesexpanded() {
           Privileges -boolean "${choice}"
     fi
 
-    defaults read com.apple.finder FXInfoPanesExpanded
+    echo "${command} ${subcommand}: ${choice}"
 }
 
 showrecenttags() {
@@ -211,11 +211,11 @@ springing(){
                                               "enable-spring-load-actions-on-all-items" \
                                               "$1")"
 
-    _mcli_defaults_number                     "NSGlobalDomain" \
+    spring="$(_mcli_defaults_number           "NSGlobalDomain" \
                                               "com.apple.springing.delay" \
-                                              "$2"
+                                              "$2")"
 
-    echo "${command} ${subcommand}: ${value}"
+    echo "${command} ${subcommand}: ${value} ${spring}"
 }
 
 minimumplayablepreviewsize(){

@@ -166,6 +166,7 @@ ipv6(){
     choice="$(_mcli_convert_yes_no_to_on_off "$1")"
 
     sudo networksetup -listallnetworkservices |
+         tail -n +2 |
          while read -r interface; do
             is_off=$(networksetup -getinfo "${interface}" | grep "IPv6: Off")
 
