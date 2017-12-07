@@ -5,7 +5,7 @@ _mcli_convert_yes_no_to_boolean() {
         "")
             echo ""
             ;;
-        1|[yY][eE][sS]|[oO][nN]|[tT][rR][rU][eE])
+        1|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE])
             echo "true"
             ;;
         0|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE])
@@ -24,7 +24,7 @@ _mcli_convert_yes_no_to_on_off() {
         "")
             echo ""
             ;;
-        1|[yY][eE][sS]|[oO][nN]|[tT][rR][rU][eE])
+        1|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE])
             echo "on"
             ;;
         0|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE])
@@ -43,7 +43,7 @@ _mcli_convert_yes_no_to_enabled_disabled() {
         "")
             echo ""
             ;;
-        1|[yY][eE][sS]|[oO][nN]|[tT][rR][rU][eE])
+        1|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE])
             echo "enabled"
             ;;
         0|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE])
@@ -62,7 +62,7 @@ _mcli_convert_yes_no_to_enable_disable() {
         "")
             echo ""
             ;;
-        1|[yY][eE][sS]|[oO][nN]|[tT][rR][rU][eE])
+        1|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE])
             echo "enable"
             ;;
         0|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE])
@@ -91,7 +91,7 @@ _mcli_convert_yes_no_to_load_unload() {
         "")
             echo ""
             ;;
-        1|[yY][eE][sS]|[oO][nN]|[tT][rR][rU][eE])
+        1|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE])
             echo "load"
             ;;
         0|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE])
@@ -110,7 +110,7 @@ _mcli_convert_yes_no_to_inverted_boolean() {
         "")
             echo ""
             ;;
-        1|[yY][eE][sS]|[oO][nN]|[tT][rR][rU][eE])
+        1|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE])
             echo "false"
             ;;
         0|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE])
@@ -129,7 +129,7 @@ _mcli_convert_yes_no_to_yes_no() {
         "")
             echo ""
             ;;
-        1|[yY][eE][sS]|[oO][nN]|[tT][rR][rU][eE])
+        1|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE])
             echo "YES"
             ;;
         0|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE])
@@ -148,7 +148,7 @@ _mcli_convert_yes_no_to_integer() {
         "")
             echo ""
             ;;
-        1|[yY][eE][sS]|[oO][nN]|[tT][rR][rU][eE])
+        1|[yY][eE][sS]|[oO][nN]|[tT][rR][uU][eE])
             echo "1"
             ;;
         0|[nN][oO]|[oO][fF][fF]|[fF][aA][lL][sS][eE])
