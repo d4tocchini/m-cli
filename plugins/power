@@ -40,36 +40,41 @@ __EOF__
 }
 
 disksleeptime(){
-  _set_power_setting "disksleep" "$1" "$2"
+    _set_power_setting "disksleep" "$1" "$2"
+
     echo "${command} ${subcommand}: $1 $2"
 }
 
 displaysleeptime(){
-  _set_power_setting "displaysleep" "$1" "$2"
+    _set_power_setting "displaysleep" "$1" "$2"
+
     echo "${command} ${subcommand}: $1 $2"
 }
 
 hibernationdelay(){
-  if [[ "$1" == "0" ]] && [[ "$2" == "0" ]]; then
-      _set_power_setting "standby" "0" "0"
-  else
-      _set_power_setting "standby" "1" "1"
-  fi
+    if [[ "$1" == "0" ]] && [[ "$2" == "0" ]]; then
+        _set_power_setting "standby" "0" "0"
+    else
+        _set_power_setting "standby" "1" "1"
+    fi
 
-  _set_power_setting "standbydelay" "$1" "$2"
+    _set_power_setting "standbydelay" "$1" "$2"
+
     echo "${command} ${subcommand}: $1 $2"
 }
 
 sleepdelay(){
-  _set_power_setting "sleep" "$1" "$2"
+    _set_power_setting "sleep" "$1" "$2"
+
     echo "${command} ${subcommand}: $1 $2"
 }
 
 powernap(){
-  battery_value="$(_mcli_convert_yes_no_to_integer "$1")"
-  plugged_value="$(_mcli_convert_yes_no_to_integer "$2")"
+    battery_value="$(_mcli_convert_yes_no_to_integer "$1")"
+    plugged_value="$(_mcli_convert_yes_no_to_integer "$2")"
 
-  _set_power_setting "powernap" "${battery_value}" "${plugged_value}"
+    _set_power_setting "powernap" "${battery_value}" "${plugged_value}"
+
     echo "${command} ${subcommand}: ${battery_value} ${plugged_value}"
 }
 

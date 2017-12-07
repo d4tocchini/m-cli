@@ -122,10 +122,10 @@ bonjouradvertisements(){
                                               "sudo")"
 
     _mcli_convert_yes_no_to_array_item "${choice}" \
-                                       "/System/Library/LaunchDaemons/com.apple.mDNSResponder.plist" \
-                                       "ProgramArguments" \
-                                       "-NoMulticastAdvertisements" \
-                                       "sudo"
+                                        "/System/Library/LaunchDaemons/com.apple.mDNSResponder.plist" \
+                                        "ProgramArguments" \
+                                        "-NoMulticastAdvertisements" \
+                                        "sudo"
 
     echo "${command} ${subcommand}: $(_mcli_convert_yes_no_to_inverted_boolean "${value}")"
 }

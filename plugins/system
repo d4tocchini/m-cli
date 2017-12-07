@@ -66,12 +66,12 @@ documentversioning(){
 }
 
 crashreporter(){
+    value="$(_mcli_defaults_string            "com.apple.CrashReporter" \
+                                              "DialogType" \
+                                              "server")"
     value="$(_mcli_defaults_yes_no_to_boolean "com.apple.SubmitDiagInfo" \
                                               "AutoSubmit" \
                                               "$1")"
-    _mcli_defaults_string                     "com.apple.CrashReporter" \
-                                              "DialogType" \
-                                              "server"
 
     echo "${command} ${subcommand}: ${value}"
 }

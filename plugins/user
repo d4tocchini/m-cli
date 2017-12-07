@@ -180,7 +180,7 @@ loginmessage(){
 
     if [ -n "${message}" ]; then
         sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "$message"
-        sudo nvram good-samaritan-message="$message"
+        sudo nvram good-samaritan-message="${message}"
     else
         sudo sh -c "defaults delete /Library/Preferences/com.apple.loginwindow LoginwindowText 2> /dev/null"
         sudo sh -c "nvram -d good-samaritan-message 2> /dev/null"
