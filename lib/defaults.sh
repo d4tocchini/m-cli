@@ -143,7 +143,7 @@ _mcli_defaults_yes_no_to_array_item() {
     local item="$4"
     local sudo="$5"
 
-    if [ "${choice}" -eq 'true' ]; then
+    if [[ "${choice}" == 'true' ]]; then
       _mcli_defaults_add_array_item "${file}" "${array}" "${item}" "${sudo}"
     else
       _mcli_defaults_delete_array_item "${file}" "${array}" "${item}" "${sudo}"
