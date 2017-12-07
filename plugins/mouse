@@ -509,6 +509,8 @@ mousemovement(){
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.mouse.scrolling" \
                                    "${scrolling_speed}")"
+
+    echo "${command} ${subcommand}: ${scaling} ${value}"
 }
 
 trackpadmovement(){
@@ -526,6 +528,8 @@ trackpadmovement(){
                                    "com.apple.trackpad.scrolling" \
                                    "${scrolling_speed}" \
                                    "sudo")"
+
+    echo "${command} ${subcommand}: ${scaling} ${value}"
 }
 
 case "${subcommand}" in

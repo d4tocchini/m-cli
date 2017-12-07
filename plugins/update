@@ -46,7 +46,7 @@ automaticcheck(){
 
     sudo softwareupdate --schedule "${choice}"
 
-    echo "${command} ${subcommand}: ${value}"
+    echo "${command} ${subcommand}: ${choice}"
 }
 
 automaticinstall(){

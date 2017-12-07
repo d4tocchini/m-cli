@@ -41,10 +41,12 @@ __EOF__
 
 disksleeptime(){
   _set_power_setting "disksleep" "$1" "$2"
+    echo "${command} ${subcommand}: $1 $2"
 }
 
 displaysleeptime(){
   _set_power_setting "displaysleep" "$1" "$2"
+    echo "${command} ${subcommand}: $1 $2"
 }
 
 hibernationdelay(){
@@ -55,10 +57,12 @@ hibernationdelay(){
   fi
 
   _set_power_setting "standbydelay" "$1" "$2"
+    echo "${command} ${subcommand}: $1 $2"
 }
 
 sleepdelay(){
   _set_power_setting "sleep" "$1" "$2"
+    echo "${command} ${subcommand}: $1 $2"
 }
 
 powernap(){
@@ -66,6 +70,7 @@ powernap(){
   plugged_value="$(_mcli_convert_yes_no_to_integer "$2")"
 
   _set_power_setting "powernap" "${battery_value}" "${plugged_value}"
+    echo "${command} ${subcommand}: ${battery_value} ${plugged_value}"
 }
 
 powerbuttonsleeps(){
@@ -92,6 +97,8 @@ restartonhang(){
     else
       sudo /usr/sbin/systemsetup -getrestartfreeze
     fi
+
+    echo "${command} ${subcommand}: ${value}"
 }
 
 persistmemory(){
@@ -105,6 +112,8 @@ persistmemory(){
     fi
 
     sudo pmset -a hibernatemode "${value}"
+
+    echo "${command} ${subcommand}: ${value}"
 }
 
 case "${subcommand}" in

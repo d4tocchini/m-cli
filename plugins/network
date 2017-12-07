@@ -48,15 +48,20 @@ defaultusername(){
     local username="$1"
 
     if [ -n "$1" ]; then
-        defaults write com.apple.NetworkAuthorization UseDefaultName -bool true
-        defaults write com.apple.NetworkAuthorization DefaultName "${username}"
+        value="$(_mcli_defaults_yes_no_to_boolean "com.apple.NetworkAuthorization" \
+                                                  "UseDefaultName" \
+                                                  "true")"
+        value="$(_mcli_defaults_string            "com.apple.NetworkAuthorization" \
+                                                  "DefaultName" \
+                                                  "${username}")"
     else
-        defaults delete com.apple.NetworkAuthorization UseDefaultName
-        defaults delete com.apple.NetworkAuthorization DefaultName
+        value="$(_mcli_defaults_delete            "com.apple.NetworkAuthorization" \
+                                                  "UseDefaultName")"
+        value="$(_mcli_defaults_delete            "com.apple.NetworkAuthorization" \
+                                                  "DefaultName")"
     fi
 
-    defaults read com.apple.NetworkAuthorization UseDefaultName
-    defaults read com.apple.NetworkAuthorization DefaultName
+    echo "${command} ${subcommand}: ${value}"
 }
 
 dnsservers(){
@@ -93,7 +98,7 @@ wakeonethernet(){
       sudo pmset -a womp "${choice}"
     fi
 
-    sudo pmset -g | grep womp
+    echo "${command} ${subcommand}: $(sudo pmset -g | grep womp)"
 }
 
 guestaccess(){
@@ -152,7 +157,9 @@ location(){
 appleremoteevents(){
     choice="$(_mcli_convert_yes_no_to_on_off "$1")"
 
-    sudo systemsetup -setremoteappleevents "${choice}"
+    result="$(sudo systemsetup -setremoteappleevents "${choice}")"
+
+    echo "${command} ${subcommand}: ${result}"
 }
 
 ipv6(){
