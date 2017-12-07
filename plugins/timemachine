@@ -14,7 +14,6 @@ help(){
     Usage:
       m timemachine usenewdisks          [ YES | NO ]  # Whether to use new disks for backups
       m timemachine useallnetworkvolumes [ YES | NO ]  # Whether to use unsupported network volumes for backups
-      m timemachine localbackups         [ YES | NO ]  # Whether to enable local backups
       m timemachine addexclusion         path          # Specify a path to be excluded from backups
 __EOF__
 }
@@ -35,12 +34,6 @@ useallnetworkvolumes(){
     echo "${command} ${subcommand}: ${value}"
 }
 
-localbackups(){
-    value="$(_mcli_convert_yes_no_to_enable_disable "$1")"
-
-    sudo tmutil ${value}local
-}
-
 addexclusion(){
   sudo defaults write /Library/Preferences/com.apple.TimeMachine SkipPaths -array-add "$1"
 
@@ -56,9 +49,6 @@ case "${subcommand}" in
         ;;
     useallnetworkvolumes)
         useallnetworkvolumes "$@"
-        ;;
-    localbackups)
-        localbackups "$@"
         ;;
     addexclusion)
         addexclusion "$@"
