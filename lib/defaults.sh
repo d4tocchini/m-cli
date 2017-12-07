@@ -156,9 +156,9 @@ _mcli_defaults_add_array_item() {
     local item="$3"
     local sudo="$4"
 
-    index="$(${sudo} /usr/libexec/PlistBuddy -c "Print ${array}" "${file}" | head -n -1 | tail -n +2 | sed "s/^[ \t]*//" | grep --line-regexp --line-number "${item}" | awk -F ":" '{print $1}')"
+    index="$(${sudo} /usr/libexec/PlistBuddy -c "Print ${array}" "${file}" | sed -n '2,100000p' | sed '$d' | sed "s/^[ \t]*//" | grep --line-regexp --line-number --regexp="${item}" | awk -F ":" '{print $1}')"
 
-    [ -z "${index}" ] && ${sudo} /usr/libexec/PlistBuddy -c "Add :${array}:0" "${file}"
+    [ -z "${index}" ] && ${sudo} /usr/libexec/PlistBuddy -c "Add :${array}:0 string '${item}'" "${file}"
 }
 
 _mcli_defaults_delete_array_item() {
@@ -167,7 +167,7 @@ _mcli_defaults_delete_array_item() {
     local item="$3"
     local sudo="$4"
 
-    index="$(${sudo} /usr/libexec/PlistBuddy -c "Print ${array}" "${file}" | head -n -1 | tail -n +2 | sed "s/^[ \t]*//" | grep --line-regexp --line-number "${item}" | awk -F ":" '{print $1}')"
+    index="$(${sudo} /usr/libexec/PlistBuddy -c "Print ${array}" "${file}" | sed -n '2,100000p' | sed '$d' | sed "s/^[ \t]*//" | grep --line-regexp --line-number --regexp="${item}" | awk -F ":" '{print $1}')"
 
     if [ -n "${index}" ]; then
       index=$((index - 1))
