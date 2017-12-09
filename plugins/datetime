@@ -33,7 +33,7 @@ __EOF__
 
     value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
                                               "AppleICUForce24HourTime" \
-                                              "$1")"
+                                              "${choice}")"
 
     echo "${command} ${subcommand}: ${value}"
 }
