@@ -66,9 +66,11 @@ removeicon() {
     domain="$(find_domain "${item}")"
     menu_item="$(find_menu_item "${item}")"
 
-    value="$(_mcli_defaults_yes_no_to_boolean "com.apple.systemuiserver" \
-                                              "NSStatusItem Visible ${domain}" \
-                                              "true")"
+    value="$(_mcli_defaults_delete "com.apple.systemuiserver" \
+                                   "NSStatusItem Visible ${domain}")"
+
+    value="$(_mcli_defaults_delete "com.apple.systemuiserver" \
+                                   "NSStatusItem Preferred Position ${domain}")"
 
     _mcli_defaults_delete_array_item "/Users/$(whoami)/Library/Preferences/com.apple.systemuiserver.plist" \
                                      'menuExtras' \
