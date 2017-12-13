@@ -12,7 +12,6 @@ help(){
     cat<<__EOF__
     Usage:
       m menubar autohide   [ YES | NO ]   # Whether to autohide the menu bar
-      m menubar airplay    [ YES | NO ]   # Whether to show the airplay options in the menu bar
       m menubar addicon    [ menuitem ]   # Add a menu bar item
       m menubar removeicon [ menuitem ]   # Remove a menu bar item
 
@@ -43,14 +42,6 @@ __EOF__
 autohide() {
     value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
                                               "_HIHideMenuBar" \
-                                              "$1")"
-
-    echo "${command} ${subcommand}: ${value}"
-}
-
-airplay() {
-    value="$(_mcli_defaults_yes_no_to_boolean "com.apple.airplay" \
-                                              "showInMenuBarIfPresent" \
                                               "$1")"
 
     echo "${command} ${subcommand}: ${value}"
@@ -205,9 +196,6 @@ case "${subcommand}" in
         ;;
     autohide)
         autohide "$@"
-        ;;
-    airplay)
-        airplay "$@"
         ;;
     addicon)
         addicon "$@"
