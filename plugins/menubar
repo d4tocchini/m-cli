@@ -56,7 +56,7 @@ addicon() {
                                               "NSStatusItem Visible ${domain}" \
                                               "true")"
 
-    _mcli_defaults_add_array_item 'com.apple.systemuiserver' \
+    _mcli_defaults_add_array_item "/Users/$(whoami)/Library/Preferences/com.apple.systemuiserver.plist" \
                                   'menuExtras' \
                                   "/System/Library/CoreServices/Menu Extras/${menu_item}.menu"
 }
@@ -70,7 +70,7 @@ removeicon() {
                                               "NSStatusItem Visible ${domain}" \
                                               "true")"
 
-    _mcli_defaults_delete_array_item 'com.apple.systemuiserver' \
+    _mcli_defaults_delete_array_item "/Users/$(whoami)/Library/Preferences/com.apple.systemuiserver.plist" \
                                      'menuExtras' \
                                      "/System/Library/CoreServices/Menu Extras/${menu_item}.menu"
 }
