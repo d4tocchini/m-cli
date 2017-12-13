@@ -16,6 +16,12 @@ help(){
       m mail messageencryption [ ON | OFF ] # whether to encrypt email automatically if a public key for the address exists
       m mail messagesigning    [ ON | OFF ] # whether to sign all emails automatically
       m mail draftencryption   [ ON | OFF ] # whether to encrypt email drafts automatically
+
+      m mail showunreadmessagesinbold [ YES | NO ]    # whether to show unread message subjects in bold fonts
+      m mail showcontactphotos        [ YES | NO ]    # whether to show photos next to messages
+
+      m mail numberoflinesinpreview   x               # the number of message body lines to display in the message list
+      m mail conversationsortorder    [ asc | desc ]  # whether to show the newest or oldest conversation at the top
 __EOF__
 
 }
@@ -64,6 +70,39 @@ draftencryption(){
     echo "${command} ${subcommand}: ${value}"
 }
 
+showunreadmessagesinbold(){
+    value="$(_mcli_defaults_yes_no_to_boolean "com.apple.mail" \
+                                              "ShouldShowUnreadMessagesInBold" \
+                                              "$1")"
+
+    echo "${command} ${subcommand}: ${value}"
+}
+
+numberoflinesinpreview(){
+    value="$(_mcli_defaults_yes_no_to_integer "com.apple.mail" \
+                                              "NumberOfSnippetLines" \
+                                              "$1")"
+
+    echo "${command} ${subcommand}: ${value}"
+}
+
+conversationsortorder(){
+    choice="$(if [[ "$1" == "asc" ]]; then echo "NO"; elif [[ "$1" == "desc" ]]; then echo "YES"; fi)"
+    value="$(_mcli_defaults_yes_no_to_boolean "com.apple.mail" \
+                                              "ConversationViewSortDescending" \
+                                              "$1")"
+
+    echo "${command} ${subcommand}: ${value}"
+}
+
+showcontactphotos(){
+    value="$(_mcli_defaults_yes_no_to_boolean "com.apple.mail" \
+                                              "EnableContactPhotos" \
+                                              "$1")"
+
+    echo "${command} ${subcommand}: ${value}"
+}
+
 case "${subcommand}" in
     help)
         help
@@ -82,6 +121,18 @@ case "${subcommand}" in
         ;;
     draftencryption)
         draftencryption "$@"
+        ;;
+    showunreadmessagesinbold)
+        showunreadmessagesinbold "$@"
+        ;;
+    numberoflinesinpreview)
+        numberoflinesinpreview "$@"
+        ;;
+    conversationsortorder)
+        conversationsortorder "$@"
+        ;;
+    showcontactphotos)
+        showcontactphotos "$@"
         ;;
     *)
         help
