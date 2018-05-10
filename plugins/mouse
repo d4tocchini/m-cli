@@ -56,6 +56,7 @@ twofingersingletap(){
     value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
                                               "com.apple.trackpad.enableSecondaryClick" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_boolean "com.apple.AppleMultitouchTrackpad" \
                                               "TrackpadRightClick" \
@@ -96,6 +97,7 @@ threefingersingletap(){
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.threeFingerTapGesture" \
                                    "${mode}" \
+                                   "global" \
                                    "sudo")"
     value="$(_mcli_defaults_number "com.apple.AppleMultitouchTrackpad" \
                                    "TrackpadThreeFingerTapGesture" \
@@ -148,6 +150,7 @@ twofingerdoubletap(){
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.twoFingerDoubleTapGesture" \
                                    "${mode}" \
+                                   "global" \
                                    "sudo")"
     value="$(_mcli_defaults_number "com.apple.AppleMultitouchTrackpad" \
                                    "TrackpadTwoFingerDoubleTapGesture" \
@@ -216,6 +219,7 @@ threefingerhorizontalswipe(){
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.threeFingerHorizSwipeGesture" \
                                    "${mode}" \
+                                   "global" \
                                    "sudo")"
     value="$(_mcli_defaults_number "com.apple.AppleMultitouchTrackpad" \
                                    "TrackpadThreeFingerHorizSwipeGesture" \
@@ -245,6 +249,7 @@ fourfingerhorizontalswipe(){
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.fourFingerHorizSwipeGesture" \
                                    "${mode}" \
+                                   "global" \
                                    "sudo")"
     value="$(_mcli_defaults_number "com.apple.AppleMultitouchTrackpad" \
                                    "TrackpadFourFingerHorizSwipeGesture" \
@@ -288,6 +293,7 @@ threefingerverticalswipe(){
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.threeFingerVertSwipeGesture" \
                                    "${mode}" \
+                                   "global" \
                                    "sudo")"
     value="$(_mcli_defaults_number "com.apple.AppleMultitouchTrackpad" \
                                    "TrackpadThreeFingerVertSwipeGesture" \
@@ -331,6 +337,7 @@ fourfingerverticalswipe(){
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.fourFingerVertSwipeGesture" \
                                    "${mode}" \
+                                   "global" \
                                    "sudo")"
     value="$(_mcli_defaults_number "com.apple.AppleMultitouchTrackpad" \
                                    "TrackpadFourFingerVertSwipeGesture" \
@@ -349,6 +356,7 @@ threefingerdrag(){
     value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
                                               "com.apple.trackpad.threeFingerDragGesture" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_boolean "com.apple.AppleMultitouchTrackpad" \
                                               "TrackpadThreeFingerDrag" \
@@ -367,6 +375,7 @@ twofingerpinch(){
     value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
                                               "com.apple.trackpad.pinchGesture" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_boolean "com.apple.AppleMultitouchTrackpad" \
                                               "TrackpadPinch" \
@@ -403,10 +412,12 @@ fourfingerpinch(){
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.fourFingerPinchSwipeGesture" \
                                    "${mode}" \
+                                   "global" \
                                    "sudo")"
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.fiveFingerPinchSwipeGesture" \
                                    "${mode}" \
+                                   "global" \
                                    "sudo")"
     value="$(_mcli_defaults_number "com.apple.AppleMultitouchTrackpad" \
                                    "TrackpadFourFingerPinchGesture" \
@@ -442,6 +453,7 @@ swipefromrightedge(){
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.twoFingerFromRightEdgeSwipeGesture" \
                                    "${mode}" \
+                                   "global" \
                                    "sudo")"
     value="$(_mcli_defaults_number "com.apple.AppleMultitouchTrackpad" \
                                    "TrackpadTwoFingerFromRightEdgeSwipeGesture" \
@@ -460,6 +472,7 @@ rotation(){
     value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
                                               "com.apple.trackpad.rotateGesture" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_boolean "com.apple.AppleMultitouchTrackpad" \
                                               "TrackpadRotate" \
@@ -491,6 +504,7 @@ shaketoenlarge(){
     value="$(_mcli_defaults_yes_no_to_boolean "NSGlobalDomain" \
                                               "CGDisableCursorLocationMagnification" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
 
     echo "${command} ${subcommand}: ${value}"
@@ -521,12 +535,14 @@ trackpadmovement(){
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.scaling" \
                                    "${scaling}" \
+                                   "global" \
                                    "sudo")"
 
     # Sets the Speed With Which the Trackpad Scrolls Content
     value="$(_mcli_defaults_number "NSGlobalDomain" \
                                    "com.apple.trackpad.scrolling" \
                                    "${scrolling_speed}" \
+                                   "global" \
                                    "sudo")"
 
     echo "${command} ${subcommand}: ${scaling} ${value}"

@@ -113,7 +113,7 @@ autologin(){
     local username="$(if [[ "$1" != "disable" ]]; then echo "$1"; fi)"
 
     if [ -z "${username}" ]; then
-        value="$(_mcli_defaults_delete "${login_pref_path}" "autoLoginUser" "sudo")"
+        value="$(_mcli_defaults_delete "${login_pref_path}" "autoLoginUser" "global" "sudo")"
         sudo rm -f /etc/kcpassword
     else
         value="$(_mcli_defaults_string "${login_pref_path}" "autoLoginUser" "$username")"
@@ -136,11 +136,13 @@ guest(){
     value="$(_mcli_defaults_yes_no_to_integer "${login_pref_path}" \
                                               "GuestEnabled" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
 
     value="$(_mcli_defaults_yes_no_to_integer "/Library/Preferences/SystemConfiguration/com.apple.smb.server" \
                                               "AllowGuestAccess" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
 
     echo "${command} ${subcommand}: ${value}"
@@ -150,6 +152,7 @@ showsecure(){
     value="$(_mcli_defaults_yes_no_to_inverted_boolean "${login_pref_path}" \
                                                        "Hide500Users" \
                                                        "$1" \
+                                                       "global" \
                                                        "sudo")"
 
     echo "${command} ${subcommand}: ${value}"
@@ -159,6 +162,7 @@ loginpoweroptions(){
     value="$(_mcli_defaults_yes_no_to_inverted_boolean "${login_pref_path}" \
                                                        "PowerOffDisabled" \
                                                        "$1" \
+                                                       "global" \
                                                        "sudo")"
 
     echo "${command} ${subcommand}: ${value}"
@@ -168,6 +172,7 @@ loginattemptsbeforehint(){
     value="$(_mcli_defaults_number "${login_pref_path}" \
                                    "RetriesUntilHint" \
                                    "$1" \
+                                   "global" \
                                    "sudo")"
 
     echo "${command} ${subcommand}: ${value}"

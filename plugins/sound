@@ -75,6 +75,7 @@ speechrecognition(){
     value="$(_mcli_defaults_yes_no_to_boolean "com.apple.speech.recognition.AppleSpeechRecognition.prefs" \
                                               "StartSpeakableItems" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
 
     echo "${command} ${subcommand}: ${value}"
@@ -83,18 +84,22 @@ speechrecognition(){
 speechtotext(){
     value="$(_mcli_defaults_delete            "com.apple.speech.synthesis.general.prefs" \
                                               "TimeAnnouncementPrefs" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_boolean "com.apple.speech.synthesis.general.prefs" \
                                               "TalkingAlertsSpeakTextFlag" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_boolean "com.apple.speech.synthesis.general.prefs" \
                                               "SpokenNotificationAppActivationFlag" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_boolean "com.apple.speech.synthesis.general.prefs" \
                                               "SpokenUIUseSpeakingHotKeyFlag" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
 
     echo "${command} ${subcommand}: ${value}"

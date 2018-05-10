@@ -61,6 +61,7 @@ bounce(){
     value="$(_mcli_defaults_yes_no_to_boolean "/Library/Preferences/.GlobalPreferences" \
                                               "NSScrollViewRubberbanding" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
 
     echo "${command} ${subcommand}: ${value}"

@@ -1,12 +1,14 @@
 _mcli_read() {
     local domain="$1"
     local key="$2"
-    local sudo="$3"
+    local scope="${3:-"global"}"
+    local scope_option="$(_mcli_defaults_scope_option "${scope}")"
+    local sudo="$4"
 
     [ -n "${domain}" ] && [ -n "${key}" ] || return 1
     [[ -n "${sudo}" ]] && sudo="sudo"
 
-    ${sudo} defaults read "${domain}" "${key}" 2> /dev/null
+    ${sudo} defaults ${scope_option} read "${domain}" "${key}" 2> /dev/null
 }
 
 _mcli_read_boolean_as_yes_no() {
@@ -75,41 +77,47 @@ _mcli_defaults_number() {
     local domain="$1"
     local key="$2"
     local new_value="$3"
-    local sudo="$4"
+    local scope="${4:-"global"}"
+    local scope_option="$(_mcli_defaults_scope_option "${scope}")"
+    local sudo="$5"
     local transformed="$(_mcli_convert_number_to_number "${new_value}")"
 
     case "${transformed}" in
         [0-9]*[.][0-9]*)
-            ${sudo} defaults write "${domain}" "${key}" -float "${transformed}"
+            ${sudo} defaults ${scope_option} write "${domain}" "${key}" -float "${transformed}"
             ;;
         [0-9]*)
-            ${sudo} defaults write "${domain}" "${key}" -int "${transformed}"
+            ${sudo} defaults ${scope_option} write "${domain}" "${key}" -int "${transformed}"
             ;;
     esac
 
-    _mcli_read_number "${domain}" "${key}"
+    _mcli_read_number "${domain}" "${key}" "${scope}" "${sudo}"
 }
 
 _mcli_defaults_string() {
     local domain="$1"
     local key="$2"
     local new_value="$3"
+    local scope="${4:-"global"}"
+    local scope_option="$(_mcli_defaults_scope_option "${scope}")"
     local sudo="$4"
 
     if [ -n "${new_value}" ]; then
-      ${sudo} defaults write "${domain}" "${key}" -string "${new_value}"
+      ${sudo} defaults ${scope_option} write "${domain}" "${key}" -string "${new_value}"
     fi
 
-    _mcli_read_string "${domain}" "${key}"
+    _mcli_read_string "${domain}" "${key}" "${scope}" "${sudo}"
 }
 
 _mcli_defaults_delete() {
     local domain="$1"
     local key="$2"
-    local sudo="$3"
+    local scope="${3:-"global"}"
+    local scope_option="$(_mcli_defaults_scope_option "${scope}")"
+    local sudo="$4"
 
     if [ -n "${sudo}" ]; then
-      ${sudo} sh -c "defaults delete '${domain}' '${key}' 2> /dev/null"
+      ${sudo} sh -c "defaults ${scope_option} delete '${domain}' '${key}' 2> /dev/null"
     else
       defaults delete "${domain}" "${key}" 2> /dev/null
     fi
@@ -122,15 +130,17 @@ _mcli_defaults_yes_no_to_type() {
     local domain="$3"
     local key="$4"
     local new_value="$5"
-    local sudo="$6"
+    local scope="${6:-"global"}"
+    local scope_option="$(_mcli_defaults_scope_option "${scope}")"
+    local sudo="$7"
     local transformed="$(_mcli_${transformer} "${new_value}")"
 
     if [ -n "${new_value}" ] && [[ "${transformed}" != "ERROR" ]]; then
-      ${sudo} defaults write "${domain}" "${key}" -${type} "${transformed}"
+      ${sudo} defaults ${scope_option} write "${domain}" "${key}" -${type} "${transformed}"
     fi
 
     if [[ "${transformed}" != "ERROR" ]]; then
-      _mcli_read_boolean_as_yes_no "${domain}" "${key}" "${sudo}"
+      _mcli_read_boolean_as_yes_no "${domain}" "${key}" "${scope}" "${sudo}"
     else
       echo "ERROR"
     fi
@@ -141,12 +151,14 @@ _mcli_defaults_yes_no_to_array_item() {
     local file="$2"
     local array="$3"
     local item="$4"
-    local sudo="$5"
+    local scope="${5:-"global"}"
+    local scope_option="$(_mcli_defaults_scope_option "${scope}")"
+    local sudo="$6"
 
     if [[ "${choice}" == 'true' ]]; then
-      _mcli_defaults_add_array_item "${file}" "${array}" "${item}" "${sudo}"
+      _mcli_defaults_add_array_item "${file}" "${array}" "${item}" "${scope}" "${sudo}"
     else
-      _mcli_defaults_delete_array_item "${file}" "${array}" "${item}" "${sudo}"
+      _mcli_defaults_delete_array_item "${file}" "${array}" "${item}" "${scope}" "${sudo}"
     fi
 }
 
@@ -154,7 +166,9 @@ _mcli_defaults_add_array_item() {
     local file="$1"
     local array="$2"
     local item="$3"
-    local sudo="$4"
+    local scope="${4:-"global"}"
+    local scope_option="$(_mcli_defaults_scope_option "${scope}")"
+    local sudo="$5"
 
     index="$(${sudo} /usr/libexec/PlistBuddy -c "Print ${array}" "${file}" | sed -n '2,100000p' | sed '$d' | sed "s/^[ \t]*//" | grep --line-regexp --line-number --regexp="${item}" | awk -F ":" '{print $1}')"
 
@@ -174,4 +188,12 @@ _mcli_defaults_delete_array_item() {
 
       ${sudo} /usr/libexec/PlistBuddy -c "Delete :${array}:${index}" "${file}"
     fi
+}
+
+_mcli_defaults_scope_option() {
+    local scope="${1:-"global"}"
+
+    [[ "${scope}" != 'global' ]] && [[ "${scope}" != 'host' ]] && echo "Invalid scope '${scope}'" && exit 1
+
+    [[ "${scope}" == 'host' ]] && echo '-currentHost'
 }

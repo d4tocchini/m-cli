@@ -86,6 +86,7 @@ captiveportal(){
     value="$(_mcli_defaults_yes_no_to_boolean "/Library/Preferences/SystemConfiguration/com.apple.captive.control" \
                                               "Active" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
 
     echo "${command} ${subcommand}: ${value}"
@@ -105,10 +106,12 @@ guestaccess(){
     value="$(_mcli_defaults_yes_no_to_boolean "/Library/Preferences/com.apple.AppleFileServer" \
                                               "guestAccess" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_boolean "/Library/Preferences/com.apple.smb.server" \
                                               "AllowGuestAccess" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
 
     echo "${command} ${subcommand}: ${value}"
@@ -118,6 +121,7 @@ bonjouradvertisements(){
     value="$(_mcli_defaults_yes_no_to_inverted_boolean "/Library/Preferences/com.apple.mDNSResponder.plist" \
                                                        "NoMulticastAdvertisements" \
                                                        "${choice}" \
+                                                       "global" \
                                                        "sudo")"
 
     echo "${command} ${subcommand}: ${value}"

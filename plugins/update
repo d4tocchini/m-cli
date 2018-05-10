@@ -53,18 +53,22 @@ automaticinstall(){
     value="$(_mcli_defaults_yes_no_to_integer "${path_to_update_prefs}" \
                                               "ConfigDataInstall" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_integer "${path_to_update_prefs}" \
                                               "CriticalUpdateInstall" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_integer "${path_to_appstore_prefs}" \
                                               "AutoUpdate" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
     value="$(_mcli_defaults_yes_no_to_integer "${path_to_appstore_prefs}" \
                                               "AutoUpdateRestartRequired" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
 
     echo "${command} ${subcommand}: ${value}"
@@ -74,6 +78,7 @@ automaticdownload(){
     value="$(_mcli_defaults_yes_no_to_integer "${path_to_update_prefs}" \
                                               "AutomaticDownload" \
                                               "$1" \
+                                              "global" \
                                               "sudo")"
 
     echo "${command} ${subcommand}: ${value}"
@@ -98,6 +103,7 @@ interval(){
     value="$(_mcli_defaults_number "${path_to_update_prefs}" \
                                    "ScheduleFrequency" \
                                    "${interval}" \
+                                   "global" \
                                    "sudo")"
 
     echo "${command} ${subcommand}: ${value}"
