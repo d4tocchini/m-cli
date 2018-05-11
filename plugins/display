@@ -27,6 +27,7 @@ autobrightness() {
 				activate
 
 				set current pane to pane "com.apple.preference.displays"
+				delay 1
 			end tell
 
 			tell application "System Events"

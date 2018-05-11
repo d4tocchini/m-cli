@@ -11,9 +11,9 @@ declare subcommand="$1"
 help(){
     cat<<__EOF__
     Usage:
-      m screensaver                               # launch screensaver
-      m screensaver status                        #  get the current status
-      m screensaver askforpassword [ YES | NO ]   #  whether to enable password requirement to unlock
+      m screensaver                                                                   # launch screensaver
+      m screensaver status                                                            # get the current status
+      m screensaver askforpassword [ YES | NO ]                                       # whether to enable password requirement to unlock
       m screensaver passworddelay  [ "immediately" | "5 seconds" | "1 minute" | etc ] # the length of time before screensaver requires password
 __EOF__
 }
