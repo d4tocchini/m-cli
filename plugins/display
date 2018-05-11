@@ -3,7 +3,6 @@
 source "$( dirname "${BASH_SOURCE[0]}" )/../lib/defaults.sh"
 source "$( dirname "${BASH_SOURCE[0]}" )/../lib/converters.sh"
 
-declare path_to_plist="/Library/Preferences/com.apple.iokit.AmbientLightSensor"
 declare command="$(basename "$0")"
 declare subcommand="$1"
 
@@ -22,13 +21,38 @@ display_status(){
 }
 
 autobrightness() {
-    value="$(_mcli_defaults_yes_no_to_integer "${path_to_plist}" \
-                                              "Automatic Display Enabled" \
-                                              "$1" \
-                                              "host" \
-                                              "sudo")"
+    osascript <<-HEREDOC
+			tell application "System Preferences"
+				close
+				activate
 
-    echo "${command} ${subcommand}: ${value}"
+				set current pane to pane "com.apple.preference.displays"
+			end tell
+
+			tell application "System Events"
+				tell application process "System Preferences"
+					repeat with theWindow in windows
+						tell theWindow
+							click
+
+							tell tab group 1
+								click radio button "Display"
+
+								set theCheckbox to checkbox "Automatically adjust brightness" of group 1
+
+								tell theCheckbox
+									set checkboxStatus to value of theCheckbox as boolean
+
+									if checkboxStatus is not $(_mcli_convert_yes_no_to_boolean "${1}") then click theCheckbox
+								end tell
+							end tell
+						end tell
+					end
+				end tell
+			end tell
+		HEREDOC
+
+    echo "${command} ${subcommand}: ${1}"
 }
 
 case "${subcommand}" in

@@ -178,3 +178,7 @@ _mcli_convert_number_to_number() {
             ;;
     esac
 }
+
+_mcli_convert_string_to_initial_capital() {
+    echo "${1^}"
+}
