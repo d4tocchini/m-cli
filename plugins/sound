@@ -20,6 +20,7 @@ help(){
       m sound powerchime          [ YES | NO ]          # whether the chime is used when power is connected/disconnected
 
       m sound alertflash          [ ON | OFF ]          # whether the screen should flash when you would normally hear an alert
+      m sound alertvolume         [ 0 through 4 ]       # the volume of the alert sounds
 __EOF__
 }
 
@@ -52,6 +53,30 @@ alertflash(){
 
 
     echo "${command} ${subcommand}: ${value}"
+}
+
+alertvolume(){
+    osascript <<-HEREDOC
+			tell application "System Preferences"
+				close
+				activate
+
+				set current pane to pane "com.apple.preference.sound"
+				delay 1
+			end tell
+
+			tell application "System Events"
+				tell application process "System Preferences"
+					tell tab group 1 of window "Sound"
+						click radio button "Sound Effects"
+
+						set value of slider "Alert volume:" to ${1}
+					end tell
+				end tell
+			end tell
+		HEREDOC
+
+    echo "${command} ${subcommand}: ${1}"
 }
 
 ui(){
@@ -150,6 +175,9 @@ case "${subcommand}" in
         ;;
     alertflash)
         alertflash "$@"
+        ;;
+    alertvolume)
+        alertvolume "$@"
         ;;
     *)
         help
