@@ -12,6 +12,7 @@ help(){
     cat<<__EOF__
     Usage:
       m spotlight shortcutkeys [ YES | NO ] # Whether to enable the Cmd-Space shortcuts
+      m spotlight suggestions  [ YES | NO ] # Whether to enable spotlight search suggestions
 __EOF__
 }
 
@@ -28,12 +29,45 @@ shortcut_keys() {
     echo "${command} ${subcommand}: ${enabled}"
 }
 
+suggestions() {
+    osascript <<-HEREDOC
+			tell application "System Preferences"
+				close
+				activate
+
+				set current pane to pane "com.apple.preference.spotlight"
+				delay 1
+			end tell
+
+			tell application "System Events"
+				tell application process "System Preferences"
+					tell tab group 1 of window "Spotlight"
+						click radio button "Search Results"
+
+						set theCheckbox to checkbox "Allow Spotlight Suggestions in Look up"
+
+						tell theCheckbox
+							set checkboxStatus to value of theCheckbox as boolean
+
+							if checkboxStatus is not $(_mcli_convert_yes_no_to_boolean "${1}") then click theCheckbox
+						end tell
+					end tell
+				end tell
+			end tell
+		HEREDOC
+
+    echo "${command} ${subcommand}: ${1}"
+}
+
 case "${subcommand}" in
     help)
         help
         ;;
     shortcutkeys)
         shortcut_keys "$@"
+        ;;
+    suggestions)
+        suggestions "$@"
         ;;
     *)
         help
