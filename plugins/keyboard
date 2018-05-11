@@ -24,8 +24,8 @@ help(){
                                   ]
       m keyboard autodim          [ YES | NO ]                # Whether to automatically dim the keyboard brightness when idle
       m keyboard autodimdelay     x                           # How long to wait before dimming the keyboard brightness
-      m keyboard keyrepeatdelay   x.x                         # How long a key needs to be held before repeating
       m keyboard keyrepeatrate    [ 0 through 7 ]             # How quickly a held key repeats (7 is shortest)
+      m keyboard keyrepeatdelay   [ 1 through 6 ]             # How long a key needs to be held before repeating (5 is shortest)
       m keyboard toggleshortcut   [ ON | OFF ] <shortcut_id>  # Toggle a shortcut by its ID either on or off
 __EOF__
 }
@@ -132,6 +132,7 @@ keyrepeatrate() {
 				activate
 
 				set current pane to pane "com.apple.preference.keyboard"
+				delay 1
 			end tell
 
 			tell application "System Events"
@@ -149,11 +150,27 @@ keyrepeatrate() {
 }
 
 keyrepeatdelay() {
-    value="$(_mcli_defaults_number "NSGlobalDomain" \
-                                   "InitialKeyRepeat" \
-                                   "$1")"
+    osascript <<-HEREDOC
+			tell application "System Preferences"
+				close
+				activate
 
-    echo "${command} ${subcommand}: ${value}"
+				set current pane to pane "com.apple.preference.keyboard"
+				delay 1
+			end tell
+
+			tell application "System Events"
+				tell application process "System Preferences"
+					tell tab group 1 of window "Keyboard"
+						click radio button "Keyboard"
+
+						set value of slider "Delay Until Repeat" to ${1}
+					end tell
+				end tell
+			end tell
+		HEREDOC
+
+    echo "${command} ${subcommand}: ${1}"
 }
 
 toggleshortcut() {
