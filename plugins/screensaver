@@ -14,7 +14,7 @@ help(){
       m screensaver                               # launch screensaver
       m screensaver status                        #  get the current status
       m screensaver askforpassword [ YES | NO ]   #  whether to enable password requirement to unlock
-      m screensaver passworddelay  x              #  the length of time before screensaver requires password
+      m screensaver passworddelay  [ "immediately" | "5 seconds" | "1 minute" | etc ] # the length of time before screensaver requires password
 __EOF__
 }
 
@@ -27,11 +27,31 @@ askforpassword(){
 }
 
 passworddelay(){
-    value="$(_mcli_defaults_number "com.apple.screensaver" \
-                                   "askForPasswordDelay" \
-                                   "$1")"
+    osascript <<-HEREDOC
+			tell application "System Preferences"
+				close
+				activate
 
-    echo "${command} ${subcommand}: ${value}"
+				set current pane to pane "com.apple.preference.security"
+				delay 1
+			end tell
+
+			tell application "System Events"
+				tell application process "System Preferences"
+					tell tab group 1 of window "Security & Privacy"
+						click radio button "General"
+
+						click pop up button 1
+
+						tell pop up button 1
+							click menu item "${1}" of menu 1
+						end tell
+					end tell
+				end tell
+			end tell
+		HEREDOC
+
+    echo "${command} ${subcommand}: ${1}"
 }
 
 status(){
@@ -49,10 +69,10 @@ case "${subcommand}" in
         help
         ;;
     askforpassword)
-        askforpassword $@
+        askforpassword "$@"
         ;;
     passworddelay)
-        passworddelay $@
+        passworddelay "$@"
         ;;
     status)
         status
