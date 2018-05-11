@@ -39,18 +39,37 @@ certificatechecking() {
 }
 
 adminauthorizationforpreferences() {
-    security authorizationdb read system.preferences > "/tmp/system.preferences.plist" 2> /dev/null
+    osascript <<-HEREDOC
+			tell application "System Preferences"
+				close
+				activate
 
-    value="$(_mcli_defaults_yes_no_to_boolean "/tmp/system.preferences" \
-                                              "shared" \
-                                              "$1")"
-    value="$(_mcli_defaults_number            "/tmp/system.preferences" \
-                                              "timeout" \
-                                              "900")"
+				set current pane to pane "com.apple.preference.security"
+				delay 1
+			end tell
 
-    security authorizationdb write system.preferences < /tmp/system.preferences.plist 2> /dev/null
+			tell application "System Events"
+				tell application process "System Preferences"
+					tell window "Security & Privacy"
+						click button "Advanced…"
 
-    echo "${command} ${subcommand}: ${value}"
+						tell sheet 1
+							set theCheckbox to checkbox "Require an administrator password to access system-wide preferences"
+
+							tell theCheckbox
+								set checkboxStatus to value of theCheckbox as boolean
+
+								if checkboxStatus is not $(_mcli_convert_yes_no_to_boolean "${1}") then click theCheckbox
+							end tell
+
+							click button "OK"
+						end tell
+					end tell
+				end tell
+			end tell
+		HEREDOC
+
+    echo "${command} ${subcommand}: ${1}"
 }
 
 case "${subcommand}" in
