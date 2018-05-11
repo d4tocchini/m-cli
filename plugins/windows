@@ -11,15 +11,15 @@ declare subcommand="$1"
 help(){
     cat<<__EOF__
     Usage:
-      m windows miniturizeondoubleclick [ YES | NO ]   # Whether to miniturize windows on a double click of the title bar
+      m windows doubleclickaction [ "minimize" | "zoom" ] # What action to take when double-clicking a window's title bar
 
 __EOF__
 }
 
-miniturizeondoubleclick() {
-    value="$(_mcli_defaults_yes_no_to_integer "NSGlobalDomain" \
-                                              "AppleMiniaturizeOnDoubleClick" \
-                                              "$1")"
+doubleclickaction() {
+    value="$(_mcli_defaults_string "NSGlobalDomain" \
+                                   "AppleActionOnDoubleClick" \
+                                   "$(_mcli_convert_string_to_initial_capital "$1")")"
 
     echo "${command} ${subcommand}: ${value}"
 }
@@ -28,8 +28,8 @@ case "${subcommand}" in
     help)
         help
         ;;
-    miniturizeondoubleclick)
-        miniturizeondoubleclick "$@"
+    doubleclickaction)
+        doubleclickaction "$@"
         ;;
     *)
         help
