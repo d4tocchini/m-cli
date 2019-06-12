@@ -178,29 +178,45 @@ hidequicklookondeactivate() {
 
 datetype() {
     local mode;
-    local plist="/Users/$(whoami)/Library/Preferences/com.apple.finder.plist"
 
     case "$1" in
-    relative)
-        mode="true";;
-    absolute)
-        mode="false";;
-    *)
-        mode="$1";;
+        absolute)
+            checked="false";;
+        relative)
+            checked="true";;
     esac
 
-    $path_to_plistbuddy -c "Delete :FK_StandardViewSettings:ListViewSettings:useRelativeDates" "${plist}" 2> /dev/null
-    $path_to_plistbuddy -c "Add :FK_StandardViewSettings:ListViewSettings:useRelativeDates bool ${mode}" "${plist}"
-    $path_to_plistbuddy -c "Delete :FK_StandardViewSettings:ExtendedListViewSettings:useRelativeDates" "${plist}" 2> /dev/null
-    $path_to_plistbuddy -c "Add :FK_StandardViewSettings:ExtendedListViewSettings:useRelativeDates bool ${mode}" "${plist}"
-    $path_to_plistbuddy -c "Delete :StandardViewSettings:ListViewSettings:useRelativeDates" "${plist}" 2> /dev/null
-    $path_to_plistbuddy -c "Add :StandardViewSettings:ListViewSettings:useRelativeDates bool ${mode}" "${plist}"
-    $path_to_plistbuddy -c "Delete :StandardViewSettings:ExtendedListViewSettings:useRelativeDates" "${plist}" 2> /dev/null
-    $path_to_plistbuddy -c "Add :StandardViewSettings:ExtendedListViewSettings:useRelativeDates bool ${mode}" "${plist}"
-    $path_to_plistbuddy -c "Delete :ComputerViewSettings:ListViewSettings:useRelativeDates" "${plist}" 2> /dev/null
-    $path_to_plistbuddy -c "Add :ComputerViewSettings:ListViewSettings:useRelativeDates bool ${mode}" "${plist}"
-    $path_to_plistbuddy -c "Delete :ComputerViewSettings:ExtendedListViewSettings:useRelativeDates" "${plist}" 2> /dev/null
-    $path_to_plistbuddy -c "Add :ComputerViewSettings:ExtendedListViewSettings:useRelativeDates bool ${mode}" "${plist}"
+    osascript <<-HEREDOC
+			tell application "Finder"
+				activate
+			end tell
+
+			tell application "System Events"
+				tell application process "Finder"
+					keystroke "n" using command down
+					keystroke "2" using command down
+					keystroke "j" using command down
+
+					delay 1
+
+					tell window "jfelchner"
+						set theCheckbox to checkbox "Use relative dates" of group 1
+
+						tell theCheckbox
+							set checkboxStatus to value of theCheckbox as boolean
+
+							if checkboxStatus is not ${checked} then click theCheckbox
+						end tell
+
+						click button "Use as Defaults"
+					end tell
+
+					delay 10
+				end tell
+			end tell
+		HEREDOC
+
+    echo "${command} ${subcommand}: ${1}"
 }
 
 springing(){
