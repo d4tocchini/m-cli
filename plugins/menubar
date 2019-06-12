@@ -52,13 +52,45 @@ addicon() {
     domain="$(find_domain "${item}")"
     menu_item="$(find_menu_item "${item}")"
 
-    value="$(_mcli_defaults_yes_no_to_boolean "com.apple.systemuiserver" \
-                                              "NSStatusItem Visible ${domain}" \
-                                              "true")"
+    if [[ "$1" == 'displays' ]]; then
+      osascript <<-HEREDOC
+				tell application "System Preferences"
+					close
+					activate
 
-    _mcli_defaults_add_array_item "/Users/$(whoami)/Library/Preferences/com.apple.systemuiserver.plist" \
-                                  'menuExtras' \
-                                  "/System/Library/CoreServices/Menu Extras/${menu_item}.menu"
+					set current pane to pane "com.apple.preference.displays"
+					delay 1
+				end tell
+
+				tell application "System Events"
+					tell application process "System Preferences"
+						repeat with theWindow in windows
+							tell theWindow
+								click
+
+								if checkbox "Show mirroring options in the menu bar when available" exists then
+									set theCheckbox to checkbox "Show mirroring options in the menu bar when available"
+
+									tell theCheckbox
+										set checkboxStatus to value of theCheckbox as boolean
+
+										if checkboxStatus is true then click theCheckbox
+									end tell
+								end if
+							end
+						end
+					end tell
+				end tell
+			HEREDOC
+    else
+      value="$(_mcli_defaults_yes_no_to_boolean "com.apple.systemuiserver" \
+                                                "NSStatusItem Visible ${domain}" \
+                                                "true")"
+
+      _mcli_defaults_add_array_item "/Users/$(whoami)/Library/Preferences/com.apple.systemuiserver.plist" \
+                                    'menuExtras' \
+                                    "/System/Library/CoreServices/Menu Extras/${menu_item}.menu"
+    fi
 }
 
 removeicon() {
@@ -66,15 +98,47 @@ removeicon() {
     domain="$(find_domain "${item}")"
     menu_item="$(find_menu_item "${item}")"
 
-    value="$(_mcli_defaults_delete "com.apple.systemuiserver" \
-                                   "NSStatusItem Visible ${domain}")"
+    if [[ "$1" == 'displays' ]]; then
+      osascript <<-HEREDOC
+				tell application "System Preferences"
+					close
+					activate
 
-    value="$(_mcli_defaults_delete "com.apple.systemuiserver" \
-                                   "NSStatusItem Preferred Position ${domain}")"
+					set current pane to pane "com.apple.preference.displays"
+					delay 1
+				end tell
 
-    _mcli_defaults_delete_array_item "/Users/$(whoami)/Library/Preferences/com.apple.systemuiserver.plist" \
-                                     'menuExtras' \
-                                     "/System/Library/CoreServices/Menu Extras/${menu_item}.menu"
+				tell application "System Events"
+					tell application process "System Preferences"
+						repeat with theWindow in windows
+							tell theWindow
+								click
+
+								if checkbox "Show mirroring options in the menu bar when available" exists then
+									set theCheckbox to checkbox "Show mirroring options in the menu bar when available"
+
+									tell theCheckbox
+										set checkboxStatus to value of theCheckbox as boolean
+
+										if checkboxStatus is true then click theCheckbox
+									end tell
+								end if
+							end
+						end
+					end tell
+				end tell
+			HEREDOC
+    else
+      value="$(_mcli_defaults_delete "com.apple.systemuiserver" \
+                                    "NSStatusItem Visible ${domain}")"
+
+      value="$(_mcli_defaults_delete "com.apple.systemuiserver" \
+                                    "NSStatusItem Preferred Position ${domain}")"
+
+      _mcli_defaults_delete_array_item "/Users/$(whoami)/Library/Preferences/com.apple.systemuiserver.plist" \
+                                      'menuExtras' \
+                                      "/System/Library/CoreServices/Menu Extras/${menu_item}.menu"
+    fi
 }
 
 find_domain() {
