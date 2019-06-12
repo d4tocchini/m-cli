@@ -52,10 +52,14 @@ displaysleeptime(){
 }
 
 hibernationdelay(){
+    # Based on pmset man page.  If standbydelay is set to 0 then standby and
+    # autopoweroff need to also be set to 0.
     if [[ "$1" == "0" ]] && [[ "$2" == "0" ]]; then
-        _set_power_setting "standby" "0" "0"
+        _set_power_setting "standby"      "0" "0"
+        _set_power_setting "autopoweroff" "0" "0"
     else
-        _set_power_setting "standby" "1" "1"
+        _set_power_setting "standby"      "1" "1"
+        _set_power_setting "autopoweroff" "1" "1"
     fi
 
     _set_power_setting "standbydelay" "$1" "$2"
