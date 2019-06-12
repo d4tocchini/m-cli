@@ -58,7 +58,6 @@ usage:  m [OPTIONS] COMMAND [help]
         dir
         disk
         diskimages
-        diskutility
         display
         dns
         dock
@@ -284,14 +283,6 @@ usage:  m [OPTIONS] COMMAND [help]
     Usage:
       m diskimages automount    [ YES | NO ] # Whether to automount disk images
       m diskimages verification [ YES | NO ] # Whether to verify disk image integrity
-```
-
-#### Disk Utility:
-```
-    Usage:
-      m diskutility advancedoptions         [ YES | NO ]  # Whether to enable advanced disk utility options
-      m diskutility showhiddenpartitions    [ YES | NO ]  # Whether to show hidden partitions
-      m diskutility showunsupportednetworks [ YES | NO ]  # Whether to show unsupported networks
 ```
 
 #### Display:

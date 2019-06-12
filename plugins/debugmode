@@ -19,10 +19,6 @@ __EOF__
 _toggle_debug_mode(){
     local enabled="$1"
 
-    # Toggle Disk Utility Debug Mode
-    defaults write com.apple.DiskUtility DUDebugMenuEnabled -bool "${enabled}"
-    defaults write com.apple.diskcopy expert-mode -bool "${enabled}"
-
     # Toggle Address Book Debug Mode
     defaults write com.apple.addressbook ABShowDebugMenu -bool "${enabled}"
 
