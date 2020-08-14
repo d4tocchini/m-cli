@@ -41,7 +41,7 @@ mediakeys(){
 
     value="$(_mcli_convert_yes_no_to_load_unload "$1")"
 
-    launchctl ${value} -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
+    launchctl "${value}" -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
 }
 
 case "${subcommand}" in
@@ -55,11 +55,11 @@ case "${subcommand}" in
         mediakeys "$@"
         ;;
     status)
-        state=`osascript -e 'tell application "iTunes" to player state as string'`
+        state="$(osascript -e 'tell application "iTunes" to player state as string')"
         echo "iTunes is currently $state."
-        if [ $state = "playing" ]; then
-            artist=`osascript -e 'tell application "iTunes" to artist of current track as string'`
-            track=`osascript -e 'tell application "iTunes" to name of current track as string'`
+        if [ "${state}" = "playing" ]; then
+            artist="$(osascript -e 'tell application "iTunes" to artist of current track as string')"
+            track="$(osascript -e 'tell application "iTunes" to name of current track as string')"
             echo "Current track $artist:  $track"
         fi
         ;;
@@ -82,7 +82,7 @@ case "${subcommand}" in
         osascript -e 'tell application "iTunes" to set mute to false'
         ;;
     vol)
-        vol=`osascript -e 'tell application "iTunes" to sound volume as integer'`
+        vol="$(osascript -e 'tell application "iTunes" to sound volume as integer')"
 
         case "$2" in
             up)
