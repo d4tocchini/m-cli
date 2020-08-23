@@ -16,7 +16,7 @@ flushdns(){
     elif echo $VERSION | grep -E '^10\.6(\.[0-8])?$' >/dev/null 2>&1; then
         sudo dscacheutil -flushcache
     else
-        sudo killall -HUP mDNSResponder
+        (sudo killall -HUP mDNSResponder || true)
     fi
 }
 
