@@ -55,7 +55,7 @@ ntpserver(){
 }
 
 international() {
-    defaults delete NSGlobalDomain AppleICUDateFormatStrings > /dev/null 2&>1
+    defaults delete NSGlobalDomain AppleICUDateFormatStrings &> /dev/null
 
     defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add "1" "yyyy-MM-dd"
     defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add "2" "yyyy MMM d"
