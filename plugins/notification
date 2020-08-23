@@ -11,9 +11,10 @@ declare subcommand="$1"
 help(){
     cat<<__EOF__
     Usage:
-      m notification enable                   # enable the notification center
-      m notification disable                  # disable the notification center
-      m notification bannertime x             # change the time that banners stay on the screen for
+      m notification enable                                                                                  # enable the notification center
+      m notification disable                                                                                 # disable the notification center
+      m notification bannertime x                                                                            # change the time that banners stay on the screen for
+      m notification donotdisturb [ whilemirroring | whiledisplaylocked | whiledisplaysleeps ] [ YES | NO ]  # change the time that banners stay on the screen for
 __EOF__
 }
 
@@ -37,10 +38,32 @@ showcenter(){
     echo "${command} ${subcommand}: ${value}"
 }
 
+donotdisturb(){
+    local key
+
+    # Highlight colors (from the crayons picker)
+    case $1 in
+        whilemirroring)
+            key="dndMirroring";;
+        whiledisplaylocked)
+            key="dndEnabledDisplayLock";;
+        whiledisplaysleeps)
+            key="dndEnabledDisplaySleep";;
+    esac
+
+    value="$(_mcli_defaults_yes_no_to_integer "com.apple.notificationcenterui" \
+                                              "${key}" \
+                                              "$2" \
+                                              "host")"
+
+    echo "${command} ${subcommand}: ${value}"
+}
+
 bannertime(){
     value="$(_mcli_defaults_string "com.apple.notificationcenterui" \
                                    "bannerTime" \
-                                   "$1")"
+                                   "$1" \
+                                   "host")"
 
     echo "${command} ${subcommand}: ${value}"
 }
@@ -60,6 +83,9 @@ case "${subcommand}" in
         ;;
     bannertime)
         bannertime "$@"
+        ;;
+    donotdisturb)
+        donotdisturb "$@"
         ;;
     *)
         help
