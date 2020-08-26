@@ -117,6 +117,12 @@ quittable() {
 
 foldersfirst() {
     value="$(_mcli_defaults_yes_no_to_boolean "com.apple.finder" \
+                                              "_FXSortFoldersFirstOnDesktop" \
+                                              "$1")"
+
+    echo "${command} ${subcommand}: ${value}"
+
+    value="$(_mcli_defaults_yes_no_to_boolean "com.apple.finder" \
                                               "_FXSortFoldersFirst" \
                                               "$1")"
 
