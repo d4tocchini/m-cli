@@ -8,6 +8,8 @@ _mcli_read() {
     [ -n "${domain}" ] && [ -n "${key}" ] || return 1
     [[ -n "${sudo}" ]] && sudo="sudo"
 
+    ! (_mcli_has_permissions "$(whoami)" "${sudo}" "${scope_option}") && echo "ERROR" && return 0
+
     ${sudo} defaults ${scope_option} read "${domain}" "${key}" 2> /dev/null
 }
 
@@ -82,14 +84,16 @@ _mcli_defaults_number() {
     local sudo="$5"
     local transformed="$(_mcli_convert_number_to_number "${new_value}")"
 
-    case "${transformed}" in
-        [0-9]*[.][0-9]*)
-            ${sudo} defaults ${scope_option} write "${domain}" "${key}" -float "${transformed}"
-            ;;
-        [0-9]*)
-            ${sudo} defaults ${scope_option} write "${domain}" "${key}" -int "${transformed}"
-            ;;
-    esac
+    if _mcli_has_permissions "$(whoami)" "${sudo}" "${scope_option}"; then
+        case "${transformed}" in
+            [0-9]*[.][0-9]*)
+                ${sudo} defaults ${scope_option} write "${domain}" "${key}" -float "${transformed}"
+                ;;
+            [0-9]*)
+                ${sudo} defaults ${scope_option} write "${domain}" "${key}" -int "${transformed}"
+                ;;
+        esac
+    fi
 
     _mcli_read_number "${domain}" "${key}" "${scope}" "${sudo}"
 }
@@ -102,8 +106,10 @@ _mcli_defaults_string() {
     local scope_option="$(_mcli_defaults_scope_option "${scope}")"
     local sudo="$4"
 
-    if [ -n "${new_value}" ]; then
-      ${sudo} defaults ${scope_option} write "${domain}" "${key}" -string "${new_value}"
+    if _mcli_has_permissions "$(whoami)" "${sudo}" "${scope_option}"; then
+      if [ -n "${new_value}" ]; then
+        ${sudo} defaults ${scope_option} write "${domain}" "${key}" -string "${new_value}"
+      fi
     fi
 
     _mcli_read_string "${domain}" "${key}" "${scope}" "${sudo}"
@@ -116,7 +122,7 @@ _mcli_defaults_delete() {
     local scope_option="$(_mcli_defaults_scope_option "${scope}")"
     local sudo="$4"
 
-    if [ -n "${sudo}" ]; then
+    if _mcli_has_permissions "$(whoami)" "${sudo}" "${scope_option}"; then
       ${sudo} sh -c "defaults ${scope_option} delete '${domain}' '${key}' 2> /dev/null"
     else
       defaults delete "${domain}" "${key}" 2> /dev/null
@@ -134,6 +140,8 @@ _mcli_defaults_yes_no_to_type() {
     local scope_option="$(_mcli_defaults_scope_option "${scope}")"
     local sudo="$7"
     local transformed="$(_mcli_${transformer} "${new_value}")"
+
+    ! (_mcli_has_permissions "$(whoami)" "${sudo}" "${scope_option}") && echo "ERROR" && return 0
 
     if [ -n "${new_value}" ] && [[ "${transformed}" != "ERROR" ]]; then
       ${sudo} defaults ${scope_option} write "${domain}" "${key}" -${type} "${transformed}"
@@ -170,6 +178,8 @@ _mcli_defaults_add_array_item() {
     local scope_option="$(_mcli_defaults_scope_option "${scope}")"
     local sudo="$5"
 
+    ! (_mcli_has_permissions "$(whoami)" "${sudo}" "${scope_option}") && echo "ERROR" && return 0
+
     index="$(${sudo} /usr/libexec/PlistBuddy -c "Print ${array}" "${file}" | sed -n '2,100000p' | sed '$d' | sed "s/^[ \t]*//" | grep --line-regexp --line-number --regexp="${item}" | awk -F ":" '{print $1}')"
 
     [ -z "${index}" ] && ${sudo} /usr/libexec/PlistBuddy -c "Add :${array}:0 string '${item}'" "${file}"
@@ -180,6 +190,8 @@ _mcli_defaults_delete_array_item() {
     local array="$2"
     local item="$3"
     local sudo="$4"
+
+    ! (_mcli_has_permissions "$(whoami)" "${sudo}" "${scope_option}") && echo "ERROR" && return 0
 
     index="$(${sudo} /usr/libexec/PlistBuddy -c "Print ${array}" "${file}" | sed -n '2,100000p' | sed '$d' | sed "s/^[ \t]*//" | grep --line-regexp --line-number --regexp="${item}" | awk -F ":" '{print $1}')"
 
@@ -196,4 +208,13 @@ _mcli_defaults_scope_option() {
     [[ "${scope}" != 'global' ]] && [[ "${scope}" != 'host' ]] && echo "Invalid scope '${scope}'" && exit 1
 
     [[ "${scope}" == 'host' ]] && echo '-currentHost'
+}
+
+_mcli_has_permissions() {
+    local user="$1"
+    local sudo="$2"
+    local scope="$3"
+    local sudo_group="${4:-"admin"}"
+
+    [ -z "${sudo}" ] || ([ -n "${sudo}" ] && groups "${user}" | grep --quiet " ${sudo_group} ")
 }

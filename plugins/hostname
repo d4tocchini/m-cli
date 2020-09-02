@@ -43,7 +43,7 @@ case $1 in
         if [ -z "$1" ]; then
             show_hostname
         else
-            set_hostname $1
+            set_hostname "$1"
         fi
         ;;
 esac
